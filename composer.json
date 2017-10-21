@@ -1,0 +1,9 @@
+{
+    "require":{
+        "aws/aws-sdk-php": "^3.36",
+    "elasticsearch/elasticsearch": "~5.0",
+    "guzzlehttp/guzzle": "~5.0",
+            "guzzlehttp/oauth-subscriber": "0.2.*",
+    "guzzlehttp/retry-subscriber": "~2.0",
+"guzzlehttp/log-subscriber": "~1.0"}
+}
