@@ -10,7 +10,10 @@ $CONSUMER_KEY = "eSZ45OWMPbHBVaGVBsHbgxsH2";
 $CONSUMER_SECRET = "RqvPYjkn0Xr3I42u7zc5nPJlBF0FYbH0YOfDiWWTndGhJOGLmY";
 
 $client = SqsClient::factory(array(
-				    'profile' => 'default',
+				    'credentials' => array(
+				        'key'    => 'AKIAJKSJDXO6SKBQIYFQ',
+				        'secret' => '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',
+				    ),
 				    'region'  => 'us-east-1',
 				    'version' => '2012-11-05'
 				));
