@@ -11,6 +11,10 @@ $access_token_secret = "mfq08S8y8MzKPJYIVlKCCeFCU1jpNTj8hOd0Ouu0nxGBd";
 $CONSUMER_KEY = "eSZ45OWMPbHBVaGVBsHbgxsH2";
 $CONSUMER_SECRET = "RqvPYjkn0Xr3I42u7zc5nPJlBF0FYbH0YOfDiWWTndGhJOGLmY";
 
+$end_point = 'https://search-twittermap-qkhshjtekerke6c7rd244mua3i.us-east-1.es.amazonaws.com';
+$index = '/tweet/tweetmap';
+$index_url = $end_point . $index;
+
 $client = SqsClient::factory(array(
 				    'credentials' => array(
 				        'key'    => 'AKIAJKSJDXO6SKBQIYFQ',
@@ -28,8 +32,9 @@ $stream = new TwitterStream(array(
 	    'token'           => $access_token,
 	    'token_secret'    => $access_token_secret
 	));
+if ($keyword == null) $keyword = "sports";
 
-$res = $stream->getStatuses(['track'=>$keyword,'locations'=>'-180.0,-90.0,180.0,90.0'], function($tweet) use($client, $queueUrl) {
+$res = $stream->getStatuses(['track'=>$keyword,'locations'=>'-180.0,-90.0,180.0,90.0'], function($tweet) use($client, $queueUrl, $index_url) {
 	if($tweet != null && array_key_exists('coordinates', $tweet) && $tweet['coordinates'] != null) {
 		if($tweet['coordinates']['type'] == 'Point' && sizeof($tweet['coordinates']['coordinates']) == 2) {
 			try{
@@ -38,6 +43,21 @@ $res = $stream->getStatuses(['track'=>$keyword,'locations'=>'-180.0,-90.0,180.0,
 				    'MessageBody' => $tweet['coordinates']['coordinates'][0] . "$$" . $tweet['coordinates']['coordinates'][1] . "$$" . $tweet['text'],
 				));
 				print("sent success");
+
+				$json = array(
+					'text' => $tweet['text'],
+					'locations' => array($tweet['coordinates']['coordinates'][0], $tweet['coordinates']['coordinates'][1])
+				);
+				$json_string = json_encode($json, True);
+				$ch = curl_init($index_url);
+				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST'); 
+				curl_setopt($ch, CURLOPT_TIMEOUT, 200);
+	    		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	    		curl_setopt($ch, CURLOPT_FORBID_REUSE, 0);
+	    		//$json_string = json_encode($tweet, True);
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $json_string);
+				$response = curl_exec($ch);
+				var_dump($response);
 			} catch (AwsException $e) {
 			    error_log($e->getMessage());
 			}
