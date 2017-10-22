@@ -32,35 +32,36 @@ $stream = new TwitterStream(array(
 	    'token'           => $access_token,
 	    'token_secret'    => $access_token_secret
 	));
-if ($keyword == null) $keyword = "sports";
 
-$res = $stream->getStatuses(['track'=>$keyword,'locations'=>'-180.0,-90.0,180.0,90.0'], function($tweet) use($client, $queueUrl, $index_url) {
+$res = $stream->getStatuses(['track'=>$keyword,'locations'=>'-180.0,-90.0,180.0,90.0'], function($tweet) use($client, $queueUrl, $index_url, $keyword) {
 	if($tweet != null && array_key_exists('coordinates', $tweet) && $tweet['coordinates'] != null) {
 		if($tweet['coordinates']['type'] == 'Point' && sizeof($tweet['coordinates']['coordinates']) == 2) {
-			try{
-				$client->sendMessage(array(
-				    'QueueUrl'    => $queueUrl,
-				    'MessageBody' => $tweet['coordinates']['coordinates'][0] . "$$" . $tweet['coordinates']['coordinates'][1] . "$$" . $tweet['text'],
-				));
-				print("sent success");
+            if(stripos($tweet['text'], $keyword)!= false || !isset($keyword) || trim($keyword)==='') {
+                try{
+                    $client->sendMessage(array(
+                        'QueueUrl'    => $queueUrl,
+                        'MessageBody' => $tweet['coordinates']['coordinates'][0] . "$$" . $tweet['coordinates']['coordinates'][1] . "$$" . $tweet['text'],
+                    ));
+                    print("sent success");
 
-				$json = array(
-					'text' => $tweet['text'],
-					'locations' => array($tweet['coordinates']['coordinates'][0], $tweet['coordinates']['coordinates'][1])
-				);
-				$json_string = json_encode($json, True);
-				$ch = curl_init($index_url);
-				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST'); 
-				curl_setopt($ch, CURLOPT_TIMEOUT, 200);
-	    		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	    		curl_setopt($ch, CURLOPT_FORBID_REUSE, 0);
-	    		//$json_string = json_encode($tweet, True);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, $json_string);
-				$response = curl_exec($ch);
-				var_dump($response);
-			} catch (AwsException $e) {
-			    error_log($e->getMessage());
-			}
+                    $json = array(
+                        'text' => $tweet['text'],
+                        'locations' => array($tweet['coordinates']['coordinates'][0], $tweet['coordinates']['coordinates'][1])
+                    );
+                    $json_string = json_encode($json, True);
+                    $ch = curl_init($index_url);
+                    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST'); 
+                    curl_setopt($ch, CURLOPT_TIMEOUT, 200);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch, CURLOPT_FORBID_REUSE, 0);
+                    //$json_string = json_encode($tweet, True);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $json_string);
+                    $response = curl_exec($ch);
+                    var_dump($response);
+                } catch (AwsException $e) {
+                    error_log($e->getMessage());
+                }
+            }
 		}
 	}
 });
