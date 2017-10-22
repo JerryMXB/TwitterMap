@@ -31,7 +31,11 @@
         map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: 34.397, lng: 150.644},
           zoom: 2
-        }); 
+        });
+        google.maps.event.addListener(map, 'click', function(event) {
+            alert(event.latLng);
+            
+        });
       }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBxcSct_LGtpjAoXRmb56TcEL7SjrrMYeM&callback=initMap"

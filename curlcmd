@@ -1,0 +1,7 @@
+curl -X PUT "https://search-twittermap-qkhshjtekerke6c7rd244mua3i.us-east-1.es.amazonaws.com/tweet/tweetmap/_mapping" -d '{"tweetmap":{"properties" : {"text" : {"type":"string"},"locations":{"type" : "geo_point"}}}}'
+
+curl -X PUT "https://search-twittermap-qkhshjtekerke6c7rd244mua3i.us-east-1.es.amazonaws.com/tweet" -d '{"index": {},"analysis":{"analyzer":{"flat" : {"type" : "custom","tokenizer" : "keyword","filter" : "lowercase"}}}}'
+
+curl -X POST "https://search-twittermap-qkhshjtekerke6c7rd244mua3i.us-east-1.es.amazonaws.com/tweet/_search" -d '{"query": {"bool": {"filter": {"geo_distance": {"distance": "100km", "locations": { "lat":  40.715,"lon": -73.988}}}}}}'
+
+curl -XPOST 'https://search-twittermap-qkhshjtekerke6c7rd244mua3i.us-east-1.es.amazonaws.com/tweet/_search' -d '{"query": {"function_score": {"functions": [{"gauss": {"locations": {"scale": "1km","origin": "50.0338, 36.2242 "}}}]}}}'
