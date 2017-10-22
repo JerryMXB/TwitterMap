@@ -36,5 +36,7 @@ try{
 					));
 } catch (AwsException $e) {
     error_log($e->getMessage());
+} catch (Exception $ex){
+    error_log($ex->getMessage());
 }
 ?>

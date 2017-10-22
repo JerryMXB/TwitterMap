@@ -20,7 +20,19 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
   </head>
   <body>
-    <input id="keyword" type="text"></input>
+    <select id="keyword">
+        <option value=""></option>>
+        <option value="today">Today</option>
+        <option value="birthday">Birthday</option>
+        <option value="sport">Sport</option>
+        <option value="hello">Hello</option>
+        <option value="nba">NBA</option>
+        <option value="coffee">Coffee</option>
+        <option value="nba">NBA</option>
+        <option value="song">Song</option>
+        <option value="it">It</option>
+        <option value="liverpool">Liverpool</option>
+    </select>
     <button id="search" type="button">Search</button>
     <button id="stop" type="button">Stop</button>
     <div id="div1"></div>
