@@ -3,13 +3,14 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 require "vendor/autoload.php";
 require "TwitterStream.php";
+require "const.php";
 use Aws\Sqs\SqsClient;
 $keyword = $_GET["keyword"];
-$access_token = "2802092556-4CTFLexYEfYCj5MYospMixSWxsS2Rv72FTwgDVa";
-$access_token_secret = "mfq08S8y8MzKPJYIVlKCCeFCU1jpNTj8hOd0Ouu0nxGBd";
+$CONSUMER_KEY = AWSConst::access_token;
+$CONSUMER_SECRET = AWSConst::access_token_secret;
 
-$CONSUMER_KEY = "eSZ45OWMPbHBVaGVBsHbgxsH2";
-$CONSUMER_SECRET = "RqvPYjkn0Xr3I42u7zc5nPJlBF0FYbH0YOfDiWWTndGhJOGLmY";
+$access_token = AWSConst::CONSUMER_KEY;
+$access_token_secret = AWSConst::CONSUMER_SECRET;
 
 $end_point = 'https://search-twittermap-qkhshjtekerke6c7rd244mua3i.us-east-1.es.amazonaws.com';
 $index = '/tweet/tweetmap';
@@ -17,8 +18,8 @@ $index_url = $end_point . $index;
 
 $client = SqsClient::factory(array(
 				    'credentials' => array(
-				        'key'    => 'AKIAJKSJDXO6SKBQIYFQ',
-				        'secret' => '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',
+				        'key'    => AWSConst::AWS_KEY,
+				        'secret' => AWSConst::AWS_SECRET,
 				    ),
 				    'region'  => 'us-east-1',
 				    'version' => '2012-11-05'

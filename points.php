@@ -2,14 +2,14 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 require "vendor/autoload.php";
+require "const.php";
 use Aws\Sqs\SqsClient;
-
 $queueUrl = "https://sqs.us-east-1.amazonaws.com/842132808572/twitts";
 
 $client = SqsClient::factory(array(
 				    'credentials' => array(
-				        'key'    => 'AKIAJKSJDXO6SKBQIYFQ',
-				        'secret' => '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',
+				        'key'    => AWSConst::AWS_KEY,
+				        'secret' => AWSConst::AWS_SECRET,
 				    ),
 				    'region'  => 'us-east-1',
 				    'version' => '2012-11-05'

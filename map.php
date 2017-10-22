@@ -46,7 +46,7 @@
         });
         google.maps.event.addListener(map, 'click', function(event) {
             var cordinates = String(event.latLng).replace('(','').replace(')','').split(', ');
-            alert(cordinates[0] + cordinates[1]);
+            //alert(cordinates[0] + cordinates[1]);
             xhr = $.ajax({url: "search.php?lat=" + cordinates[0] + "&lon=" + cordinates[1], success: function(result){
               alert("Showing nearby tweets from ES");
               var tweets = result.split('&&');
