@@ -33,8 +33,31 @@
           zoom: 2
         });
         google.maps.event.addListener(map, 'click', function(event) {
-            alert(event.latLng);
-            
+            var cordinates = String(event.latLng).replace('(','').replace(')','').split(', ');
+            alert(cordinates[0] + cordinates[1]);
+            xhr = $.ajax({url: "search.php?lat=" + cordinates[0] + "&lon=" + cordinates[1], success: function(result){
+              alert("Showing nearby tweets from ES");
+              var tweets = result.split('&&');
+              tweets.forEach(function(entry) {
+                var contents = entry.split('$$');
+                console.log(contents[0]);
+                var myLatLng = new google.maps.LatLng(Number(contents[1]), Number(contents[2]));
+                var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+                var marker = new google.maps.Marker({
+                    position: myLatLng,
+                    animation: google.maps.Animation.DROP,
+                    title: contents[0],
+                    icon: image
+                });
+                marker.addListener('click', function() {
+                  new google.maps.InfoWindow({content: contents[0]}).open(map, marker);
+                });
+                // To add the marker to the map, call setMap();
+                marker.setMap(map);
+
+                });
+
+            }});
         });
       }
     </script>
